@@ -1,0 +1,17 @@
+<h2>Pooja List</h2>
+
+{% for pooja in poojas %}
+
+<div style="border:1px solid gray; padding:10px; margin:10px">
+
+<h3>{{ pooja.pooja_name }}</h3>
+
+<p>Temple: {{ pooja.temple.name }}</p>
+
+<p>Price: ₹{{ pooja.price }}</p>
+
+<a href="/book/{{ pooja.id }}">Book Now</a>
+
+</div>
+
+{% endfor %}
