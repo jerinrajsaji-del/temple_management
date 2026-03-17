@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Complete Payment - Divine Seva{% endblock %}
+
+{% block content %}
+<div class="container py-5 mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="row g-5">
+                <!-- Order Summary -->
+                <div class="col-lg-5 order-lg-2 animate-slide-left">
+                    <div class="card border-0 shadow-lg bg-primary text-white p-4 rounded-5 sticky-top" style="top: 100px;">
+                        <h4 class="fw-bold mb-4">SEVA SUMMARY</h4>
+                        <div class="d-flex justify-content-between mb-3 opacity-75">
+                            <span>Service</span>
+                            <span class="fw-bold text-end">{{ booking.pooja.pooja_name }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-3 opacity-75">
+                            <span>Institution</span>
+                            <span class="fw-bold text-end">{{ booking.temple.name }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-3 opacity-75">
+                            <span>Devotee</span>
+                            <span class="fw-bold text-end">{{ booking.devotee_name }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-3 opacity-75">
+                            <span>Scheduled Date</span>
+                            <span class="fw-bold text-end">{{ booking.date|date:"F d, Y" }}</span>
+                        </div>
+                        <hr class="my-4 opacity-25">
+                        <div class="d-flex justify-content-between align-items-center mb-0">
+                            <span class="fs-5">Total Seva Offering</span>
+                            <span class="display-6 fw-bold text-gold">₹{{ booking.pooja.price }}</span>
+                        </div>
+                        <div class="mt-4 p-3 bg-white bg-opacity-10 rounded-4 extra-small">
+                            <i class="bi bi-info-circle me-2"></i> Amount inclusive of all ritual materials and administrative contributions.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payment Options -->
+                <div class="col-lg-7 order-lg-1 animate-slide-up">
+                    <h2 class="fw-bold mb-1">PAYMENT GATEWAY</h2>
+                    <p class="text-muted mb-5">Select your preferred sacred contribution method.</p>
+
+                    <div class="payment-methods">
+                        <!-- UPI -->
+                        <div class="payment-card card border-0 shadow-sm p-4 rounded-4 mb-3 transform-hover cursor-pointer" onclick="selectPayment('upi')">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-primary-subtle text-primary rounded-circle p-3 me-3">
+                                        <i class="bi bi-qr-code fs-3"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="fw-bold mb-0">UPI Selection</h5>
+                                        <p class="text-muted small mb-0">Google Pay, PhonePe, Paytm</p>
+                                    </div>
+                                </div>
+                                <div class="form-check fs-4">
+                                    <input class="form-check-input" type="radio" name="payMethod" id="upi">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card -->
+                        <div class="payment-card card border-0 shadow-sm p-4 rounded-4 mb-3 transform-hover cursor-pointer" onclick="selectPayment('card')">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-primary-subtle text-primary rounded-circle p-3 me-3">
+                                        <i class="bi bi-credit-card fs-3"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="fw-bold mb-0">Credit / Debit Card</h5>
+                                        <p class="text-muted small mb-0">Visa, Mastercard, RuPay, Amex</p>
+                                    </div>
+                                </div>
+                                <div class="form-check fs-4">
+                                    <input class="form-check-input" type="radio" name="payMethod" id="card">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Net Banking -->
+                        <div class="payment-card card border-0 shadow-sm p-4 rounded-4 mb-5 transform-hover cursor-pointer" onclick="selectPayment('net')">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-primary-subtle text-primary rounded-circle p-3 me-3">
+                                        <i class="bi bi-bank fs-3"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="fw-bold mb-0">Net Banking</h5>
+                                        <p class="text-muted small mb-0">All Major Indian Banks</p>
+                                    </div>
+                                </div>
+                                <div class="form-check fs-4">
+                                    <input class="form-check-input" type="radio" name="payMethod" id="net">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="processingLoader" class="text-center d-none my-5">
+                            <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;"></div>
+                            <h4 class="fw-bold mt-4 text-primary animate-pulse">PROCESSING DIVINE TRANSACTION...</h4>
+                            <p class="text-muted">Please do not refresh or close this window.</p>
+                        </div>
+
+                        <div id="paymentActions">
+                            <a href="{% url 'process_payment' booking.id %}" onclick="showProcessing(event)" class="btn btn-primary btn-lg w-100 py-3 rounded-pill shadow-lg hover-lift fw-bold">
+                                COMPLETE CONTRIBUTION <i class="bi bi-lock-fill ms-2"></i>
+                            </a>
+                            <p class="text-center mt-4 text-muted small">
+                                <i class="bi bi-shield-check text-success me-1"></i> SSL SECURED & RITUAL VERIFIED
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function selectPayment(id) {
+        document.getElementById(id).checked = true;
+    }
+
+    function showProcessing(e) {
+        e.preventDefault();
+        document.getElementById('paymentActions').classList.add('d-none');
+        document.getElementById('processingLoader').classList.remove('d-none');
+        
+        // Simulate processing time before actual redirect
+        setTimeout(() => {
+            window.location.href = e.currentTarget.href;
+        }, 2500);
+    }
+</script>
+{% endblock %}

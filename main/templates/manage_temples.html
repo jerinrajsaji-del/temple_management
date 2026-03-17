@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Manage Temples - Admin Portal{% endblock %}
+
+{% block content %}
+<div class="container py-5 mt-4">
+    <div class="row g-5">
+        <!-- Temple Form (Add/Edit) -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-lg p-4 sticky-top animate-fade-in" style="top: 100px;">
+                <h3 class="fw-bold mb-4 text-primary">{% if edit_mode %}EDIT TEMPLE{% else %}ADD NEW TEMPLE{% endif %}</h3>
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% for field in form %}
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold text-uppercase opacity-75">{{ field.label }}</label>
+                            {{ field }}
+                            {% if field.errors %}
+                                <div class="text-danger small">{{ field.errors }}</div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary py-3 shadow hover-lift">{% if edit_mode %}Update Details{% else %}Register Temple{% endif %}</button>
+                        {% if edit_mode %}
+                            <a href="{% url 'manage_temples' %}" class="btn btn-outline-secondary py-2 mt-2">Cancel Edit</a>
+                        {% endif %}
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Temples List -->
+        <div class="col-lg-8 animate-slide-up">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="fw-bold mb-0">REGISTERED TEMPLES</h2>
+                <span class="badge bg-primary px-3 py-2 rounded-pill shadow-sm">{{ temples.count }} Total</span>
+            </div>
+            
+            <div class="row g-4">
+                {% for temple in temples %}
+                    <div class="col-12">
+                        <div class="card border-0 shadow-hover h-100 bg-white overflow-hidden transition-all {% if edit_mode and edit_id == temple.id %}border border-primary bg-light-subtle{% endif %}">
+                            <div class="row g-0">
+                                <div class="col-md-3">
+                                    <div class="position-relative h-100">
+                                        {% if temple.image %}
+                                            <img src="{{ temple.image.url }}" class="img-fluid h-100" alt="{{ temple.name }}" style="object-fit: cover; min-height: 180px;">
+                                        {% else %}
+                                            <div class="bg-light h-100 d-flex align-items-center justify-content-center text-muted" style="min-height: 180px;">
+                                                <span class="fs-1">🛕</span>
+                                            </div>
+                                        {% endif %}
+                                        <div class="position-absolute top-0 end-0 p-2">
+                                            <span class="badge bg-dark bg-opacity-75 shadow-sm">ID: {{ temple.id }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="card-body p-4">
+                                        <div class="d-flex justify-content-between align-items-start">
+                                            <div>
+                                                <h4 class="fw-bold mb-1">{{ temple.name }}</h4>
+                                                <p class="text-muted small mb-3"><i class="bi bi-geo-alt-fill text-primary me-1"></i> {{ temple.location }}</p>
+                                            </div>
+                                            <div class="d-flex gap-2">
+                                                <a href="{% url 'edit_temple' temple.id %}" class="btn btn-sm btn-outline-primary rounded-circle shadow-sm" title="Edit">
+                                                    <i class="bi bi-pencil"></i>
+                                                </a>
+                                                <button type="button" class="btn btn-sm btn-outline-danger rounded-circle shadow-sm" data-bs-toggle="modal" data-bs-target="#deleteTempleModal{{ temple.id }}" title="Delete">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="row g-2 mb-3">
+                                            <div class="col-sm-6">
+                                                <div class="small text-muted p-2 bg-light rounded d-flex align-items-center">
+                                                    <i class="bi bi-telephone text-primary me-2"></i> {{ temple.contact_number }}
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="small text-muted p-2 bg-light rounded d-flex align-items-center">
+                                                    <i class="bi bi-envelope text-primary me-2"></i> {{ temple.email|default:"No Email" }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <p class="card-text text-muted line-clamp-2">{{ temple.description }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Delete Confirmation Modal -->
+                        <div class="modal fade" id="deleteTempleModal{{ temple.id }}" tabindex="-1">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content border-0 shadow-lg">
+                                    <div class="modal-header border-0 pb-0">
+                                        <h5 class="modal-title fw-bold">Confirm Deletion</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body py-4">
+                                        <div class="text-center mb-4">
+                                            <div class="display-1 text-danger mb-3">⚠️</div>
+                                            <p class="h5">Are you sure you want to delete <br><span class="fw-bold text-primary">{{ temple.name }}</span>?</p>
+                                            <p class="text-muted small">This action will permanently remove the temple and its associated poojas from the system.</p>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer border-0 pt-0 bg-light p-4 justify-content-center">
+                                        <button type="button" class="btn btn-secondary px-4 rounded-pill" data-bs-dismiss="modal">Go Back</button>
+                                        <a href="{% url 'delete_temple' temple.id %}" class="btn btn-danger px-4 rounded-pill shadow-sm">Delete Temple</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="col-12 text-center py-5">
+                        <div class="p-5 bg-white rounded shadow-sm">
+                            <div class="display-1 text-muted mb-3">🏜️</div>
+                            <h4 class="text-muted">No temples registered yet.</h4>
+                            <p class="text-muted small">Start by adding your first temple institution using the form on the left.</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

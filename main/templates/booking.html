@@ -1,21 +1,92 @@
-<h2>Book Pooja</h2>
+{% extends 'base.html' %}
+{% load static %}
 
-<h3>{{ pooja.pooja_name }}</h3>
+{% block title %}Book {{ pooja.pooja_name }} - Divine Seva{% endblock %}
 
-<form method="POST">
-
-{% csrf_token %}
-
-<label>Name</label>
-<input type="text" name="name">
-
-<br><br>
-
-<label>Date</label>
-<input type="date" name="date">
-
-<br><br>
-
-<button type="submit">Book Now</button>
-
-</form>
+{% block content %}
+<div class="container py-5 mt-4">
+    <div class="row justify-content-center animate-slide-up">
+        <div class="col-lg-11">
+            <div class="card shadow-lg border-0 overflow-hidden rounded-5">
+                <div class="row g-0">
+                    <!-- Service Info Sidebar -->
+                    <div class="col-md-4 bg-primary text-white p-5 d-flex flex-column justify-content-between">
+                        <div>
+                            <div class="mb-5 animate-slide-left" style="animation-delay: 0.2s;">
+                                <span class="badge bg-gold text-dark mb-2 px-3 py-2 fw-bold rounded-pill">SERVICE DETAILS</span>
+                                <h2 class="display-5 fw-bold mt-2">{{ pooja.pooja_name }}</h2>
+                                <p class="opacity-75 fs-5"><i class="bi bi-bank2 me-2"></i> {{ pooja.temple.name }}</p>
+                            </div>
+                            
+                            <div class="mb-5 animate-slide-left" style="animation-delay: 0.4s;">
+                                <h5 class="text-uppercase tracking-widest opacity-50 small fw-bold">TOTAL OFFERING</h5>
+                                <div class="display-3 fw-bold">₹{{ pooja.price }}</div>
+                                <p class="small text-gold fw-bold mt-1">All Inclusive Divine Contribution</p>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-auto animate-slide-left" style="animation-delay: 0.6s;">
+                            <div class="glass-card p-4 rounded-4 bg-white bg-opacity-10 border-0 mb-4">
+                                <h6 class="fw-bold mb-3"><i class="bi bi-shield-lock me-2"></i>PREMIUM ASSURANCE</h6>
+                                <ul class="list-unstyled small mb-0 opacity-75">
+                                    <li class="mb-2"><i class="bi bi-check2-circle text-gold me-2"></i>Verified Temple Partnership</li>
+                                    <li class="mb-2"><i class="bi bi-check2-circle text-gold me-2"></i>Instant Digital E-Receipt</li>
+                                    <li><i class="bi bi-check2-circle text-gold me-2"></i>Secured Devotee Privacy</li>
+                                </ul>
+                            </div>
+                            <p class="extra-small opacity-50 text-center mb-0">"Seva is that which moves with the speed of thought."</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Booking Form -->
+                    <div class="col-md-8 p-5 bg-white">
+                        <div class="animate-fade-in" style="animation-delay: 0.3s;">
+                            <h3 class="fw-bold mb-1 text-primary">DEVOTEE INFORMATION</h3>
+                            <p class="text-muted mb-5">Please provide accurate spiritual details for proper ritual performance.</p>
+                            
+                            <form method="POST">
+                                {% csrf_token %}
+                                
+                                <div class="row g-4">
+                                    <div class="col-md-12">
+                                        <div class="form-floating mb-3">
+                                            <input type="text" name="name" class="form-control border-0 bg-light rounded-4 px-4 shadow-inner" id="nameInput" placeholder="Name" required>
+                                            <label for="nameInput" class="px-4 text-muted">Full Name of Devotee *</label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-12">
+                                        <div class="form-floating mb-3">
+                                            <input type="text" name="nakshatra" class="form-control border-0 bg-light rounded-4 px-4 shadow-inner" id="naksInput" placeholder="Nakshatra" required>
+                                            <label for="naksInput" class="px-4 text-muted">Nakshatra *</label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-12">
+                                        <label class="form-label small fw-bold text-uppercase opacity-75 px-2 mb-3">Select Date of Performance *</label>
+                                        <input type="date" name="date" class="form-control form-control-lg border-0 bg-light rounded-4 px-4 shadow-inner" required>
+                                    </div>
+                                    
+                                    <div class="col-md-12 mt-5">
+                                        <div class="p-4 bg-light rounded-5 border-0 shadow-inner mb-5">
+                                            <div class="form-check">
+                                                <input class="form-check-input mt-1" type="checkbox" id="terms" required>
+                                                <label class="form-check-label small text-secondary" for="terms">
+                                                    I solemnly declare that the information provided is correct and I am booking this service with pure spiritual intent. I agree to comply with all temple customs and regulations.
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary btn-lg w-100 py-3 shadow-lg rounded-pill hover-lift fw-bold">
+                                            CONFIRM & INITIATE SEVA <i class="bi bi-arrow-right-circle ms-2"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

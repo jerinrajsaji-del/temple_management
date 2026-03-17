@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Payment Successful - Divine Seva{% endblock %}
+
+{% block content %}
+<div class="container py-5 mt-4">
+    <div class="row justify-content-center text-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-lg p-5 rounded-5 animate-slide-up">
+                <div class="success-animation mb-4">
+                    <div class="display-1 text-success animate-bounce">
+                        <i class="bi bi-check-circle-fill"></i>
+                    </div>
+                </div>
+                
+                <h1 class="display-4 fw-bold text-primary mb-3">TRANSACTION SUCCESSFUL!</h1>
+                <p class="lead text-muted fs-4 mb-5">Your sacred contribution has been consecuted and your pooja is successfully booked.</p>
+                
+                <div class="row g-4 mb-5 justify-content-center">
+                    <div class="col-md-6">
+                        <div class="p-4 bg-light rounded-4 border">
+                            <h6 class="text-muted extra-small text-uppercase fw-bold mb-2">TRANSACTION ID</h6>
+                            <h5 class="fw-bold text-primary mb-0">{{ booking.transaction_id }}</h5>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-4 bg-light rounded-4 border">
+                            <h6 class="text-muted extra-small text-uppercase fw-bold mb-2">BOOKING DATE</h6>
+                            <h5 class="fw-bold text-primary mb-0">{{ booking.created_at|date:"d M, Y H:i" }}</h5>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card p-4 rounded-4 bg-primary-subtle text-primary border-primary-subtle mb-5">
+                    <div class="d-flex align-items-center justify-content-center text-center">
+                        <i class="bi bi-envelope-check-fill fs-3 me-3"></i>
+                        <p class="mb-0 fw-bold small">A confirmation digital e-receipt has been generated and added to your ledger.</p>
+                    </div>
+                </div>
+
+                <div class="d-flex flex-column flex-sm-row justify-content-center gap-3">
+                    <a href="{% url 'dashboard' %}" class="btn btn-primary px-5 py-3 rounded-pill shadow shadow-hover fw-bold">VIEW MY LEDGER</a>
+                    <a href="/" class="btn btn-outline-primary px-5 py-3 rounded-pill fw-bold">BACK TO HOME</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+    40% {transform: translateY(-20px);}
+    60% {transform: translateY(-10px);}
+}
+.animate-bounce {
+    animation: bounce 2s infinite;
+}
+</style>
+{% endblock %}

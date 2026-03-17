@@ -1,152 +1,135 @@
+{% extends 'base.html' %}
 {% load static %}
 
-
-<!DOCTYPE html>
-<html>
-<head>
-
-<title>Temple Booking</title>
-
-<link rel="stylesheet" href="{% static 'css/style.css' %}">
-
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600&display=swap" rel="stylesheet">
-
-
-</head>
-
-<body>
-
-<!-- Top Bar -->
-
-<div class="topbar">
-
-<div>
-info@templebooking.com | +91 934 943 8666
-</div>
-
-<div>
-Help / Support / Contact
-</div>
-
-</div>
-
-<PRE>
-</PRE>
-
-
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-
-<div class="container">
-
-<a class="navbar-brand" href="#">Temple Booking</a>
-
-<ul class="navbar-nav ms-auto">
-
-<li class="nav-item">
-<a class="nav-link" href="/">Home</a>
-</li>
-
-<li class="nav-item">
-<a class="nav-link" href="/pooja">Pooja</a>
-</li>
-
-<li class="nav-item">
-<a class="nav-link" href="/login">Login</a>
-</li>
-
-</ul>
-
-</div>
-
-</nav>
-
-
-<!-- Navbar -->
-
-<div class="navbar">
-
-<h2 class="logo-title">DIVINE SEVA BOOKING PLATFORM</h2>
-
-</div>
-
-<!-- Hero Image -->
-<div class="hero"
-style="background-image:url('/static/images/image.png');
-background-size:cover;
-background-position:center;
-height:500px;
-display:flex;
-align-items:center;
-justify-content:center;
-flex-direction:column;
-color:white;">
-
-
-<h1 style="background:black; color:white; padding:10px; display:inline-block;">
-Temple Online Booking System
-</h1>
-
-<p>Book pooja services easily</p>
-
-<a href="/pooja" class="btn btn-warning">Book Pooja</a>
-
-</div>
-
-
-<div class="hero-text">
-
-"Combination Of Rich Experience  
-And Technological Excellence"
-
-</div>
-
-</div>
-
-<div class="container mt-5">
-
-<h2 class="text-center">Temples</h2>
-
-<div class="row">
-
-{% for temple in temples %}
-
-<div class="col-md-4">
-
-<div class="card shadow">
-
-<div class="card-body">
-
-<h5 class="card-title">{{ temple.name }}</h5>
-
-<p class="card-text">{{ temple.location }}</p>
-
-<a href="/pooja" class="btn btn-primary">View Poojas</a>
-
-</div>
-
-</div>
-
-</div>
-
-{% endfor %}
-
-</div>
-
-</div>
-
-
-
-
-
-<footer class="bg-dark text-white text-center p-3 mt-5">
-
-<p>© 2026 Temple Booking System</p>
-
-</footer>
-
-
-
-</body>
-</html>
+{% block title %}Divine Seva - Sacred Temple Discovery{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section text-white text-center">
+    <div class="container hero-content animate-slide-up">
+        <h1 class="display-2 fw-bold mb-3">SACRED CONNECTION</h1>
+        <p class="lead mb-5 fs-4 fw-light" style="max-width: 900px; margin: 0 auto; opacity: 0.9;">
+            "Experience the divine synergy of ancient traditions <br>and modern technological excellence."
+        </p>
+        <div class="d-flex justify-content-center gap-4">
+            <a href="/pooja" class="btn btn-primary btn-lg px-5 py-3 shadow-lg rounded-pill animate-slide-up" style="animation-delay: 0.2s;">
+                <i class="bi bi-stars me-2"></i>Explore Services
+            </a>
+            <a href="#temples" class="btn btn-outline-light btn-lg px-5 py-3 rounded-pill animate-slide-up" style="animation-delay: 0.4s;">
+                <i class="bi bi-temple me-2"></i>Browse Institutions
+            </a>
+        </div>
+    </div>
+    <div class="position-absolute w-100 h-100 hero-overlay" style="top:0; left:0;"></div>
+    <img src="{% static 'images/temple_hero_image.png' %}" class="position-absolute w-100 h-100" style="top:0; left:0; object-fit: cover; z-index: 0;" alt="Temple Hero">
+</section>
+
+<!-- Temples Section -->
+<section id="temples" class="py-5">
+    <div class="container py-5">
+        <div class="row mb-5 animate-slide-up">
+            <div class="col-12 text-center">
+                <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill mb-3">TRUSTED INSTITUTIONS</span>
+                <h2 class="display-4 fw-bold mb-3">EXPLORE SACRED TEMPLES</h2>
+                <div class="mx-auto bg-primary rounded-pill mb-4" style="width: 100px; height: 5px;"></div>
+                <p class="text-muted fs-5">Begin your spiritual journey by connecting with our verified temple partners.</p>
+            </div>
+        </div>
+
+        <div class="row g-5">
+            {% for temple in temples %}
+                <div class="col-md-6 col-lg-4 animate-slide-up" style="animation-delay: 0.2s;">
+                    <div class="card h-100 shadow-hover border-0 overflow-hidden transform-hover">
+                        <div class="position-relative overflow-hidden" style="height: 280px;">
+                            {% if temple.image %}
+                                <img src="{{ temple.image.url }}" class="card-img-top h-100 transition-all" alt="{{ temple.name }}" style="object-fit: cover;">
+                            {% else %}
+                                <div class="bg-primary-subtle h-100 d-flex align-items-center justify-content-center text-primary">
+                                    <i class="bi bi-bank2 fs-1"></i>
+                                </div>
+                            {% endif %}
+                            <div class="position-absolute bottom-0 start-0 p-3 w-100" style="background: linear-gradient(transparent, rgba(0,0,0,0.8));">
+                                <span class="badge bg-gold text-dark fw-bold rounded-pill shadow-sm">VERIFIED PARTNER</span>
+                            </div>
+                        </div>
+                        <div class="card-body p-4 bg-white">
+                            <h3 class="card-title fw-bold mb-2 h4">{{ temple.name }}</h3>
+                            <p class="text-muted small mb-4"><i class="bi bi-geo-alt-fill text-primary me-2"></i>{{ temple.location }}</p>
+                            <p class="card-text text-muted line-clamp-2 small">{{ temple.description|default:"Experience the profound spiritual heritage and sacred rituals preserved through generations at this historical institution." }}</p>
+                            <div class="d-grid mt-4">
+                                <a href="/pooja" class="btn btn-outline-primary rounded-pill hover-lift py-2">
+                                    <i class="bi bi-arrow-right-circle me-2"></i>View Offerings
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-12 text-center py-5">
+                    <div class="p-5 glass-card rounded-5 animate-fade-in">
+                        <i class="bi bi-journals fs-1 text-primary mb-3"></i>
+                        <h3 class="fw-bold">Establishing Connections...</h3>
+                        <p class="text-muted">Our sacred map is currently being updated with new sacred grounds. Please check back soon.</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Advanced Stats Section -->
+<section class="py-5 bg-dark text-white overflow-hidden">
+    <div class="container py-5">
+        <div class="row g-4 text-center">
+            <div class="col-6 col-lg-3 animate-slide-up" style="animation-delay: 0.1s;">
+                <div class="p-4 rounded-4 bg-white bg-opacity-10 backdrop-blur">
+                    <div class="display-4 fw-bold text-gold mb-2">500+</div>
+                    <div class="small fw-bold text-uppercase opacity-75">Trust Temples</div>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3 animate-slide-up" style="animation-delay: 0.2s;">
+                <div class="p-4 rounded-4 bg-white bg-opacity-10 backdrop-blur">
+                    <div class="display-4 fw-bold text-gold mb-2">1M+</div>
+                    <div class="small fw-bold text-uppercase opacity-75">Rituals Performed</div>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3 animate-slide-up" style="animation-delay: 0.3s;">
+                <div class="p-4 rounded-4 bg-white bg-opacity-10 backdrop-blur">
+                    <div class="display-4 fw-bold text-gold mb-2">50K+</div>
+                    <div class="small fw-bold text-uppercase opacity-75">Daily Devotees</div>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3 animate-slide-up" style="animation-delay: 0.4s;">
+                <div class="p-4 rounded-4 bg-white bg-opacity-10 backdrop-blur">
+                    <div class="display-4 fw-bold text-gold mb-2">99%</div>
+                    <div class="small fw-bold text-uppercase opacity-75">Success Rate</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-5 bg-white overflow-hidden">
+    <div class="container py-5">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6 animate-slide-left">
+                <span class="badge bg-gold text-dark mb-3 px-3 py-2 fw-bold">JOIN THE MISSION</span>
+                <h2 class="display-4 fw-bold mb-4">MODERNIZING SACRED CEREMONIES</h2>
+                <p class="text-muted fs-5 mb-5">We are on a journey to preserve our rich heritage while embracing the efficiency of modern technology. Join us in bringing divinity closer to every devotee's heart.</p>
+                <div class="d-flex gap-3">
+                    <a href="/register" class="btn btn-primary px-5 py-3 rounded-pill shadow">Register Today</a>
+                    <a href="/login" class="btn btn-link text-primary fw-bold text-decoration-none px-0">Sign In to Dashboard <i class="bi bi-arrow-right"></i></a>
+                </div>
+            </div>
+            <div class="col-lg-6 animate-fade-in text-center">
+                <div class="bg-primary-subtle p-5 rounded-5 shadow-inner">
+                    <i class="bi bi-stars display-1 text-primary opacity-25"></i>
+                    <h3 class="fw-bold mt-4">100% Secure & Sacred</h3>
+                    <p class="text-muted">Every ritual booked is backed by our direct collaboration with temple institutions, ensuring authenticity and devotion.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

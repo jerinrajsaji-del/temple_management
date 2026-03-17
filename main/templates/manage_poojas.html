@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Manage Pooja Services - Admin Portal{% endblock %}
+
+{% block content %}
+<div class="container py-5 mt-4">
+    <div class="row g-5">
+        <!-- Pooja Form (Add/Edit) -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-lg p-4 sticky-top animate-fade-in" style="top: 100px;">
+                <h3 class="fw-bold mb-4 text-primary">{% if edit_mode %}EDIT SERVICE{% else %}CREATE POOJA{% endif %}</h3>
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% for field in form %}
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold text-uppercase opacity-75">{{ field.label }}</label>
+                            {{ field }}
+                            {% if field.errors %}
+                                <div class="text-danger small">{{ field.errors }}</div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary py-3 shadow hover-lift">{% if edit_mode %}Update Service{% else %}Add Service{% endif %}</button>
+                        {% if edit_mode %}
+                            <a href="{% url 'manage_poojas' %}" class="btn btn-outline-secondary py-2 mt-2">Cancel Edit</a>
+                        {% endif %}
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Poojas List -->
+        <div class="col-lg-8 animate-slide-up">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="fw-bold mb-0">ACTIVE SERVICES</h2>
+                <span class="badge bg-primary px-3 py-2 rounded-pill shadow-sm">{{ poojas.count }} Total</span>
+            </div>
+            
+            <div class="table-responsive bg-white rounded shadow-lg p-1">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="py-3 px-4">Service Details</th>
+                            <th class="py-3">Temple</th>
+                            <th class="py-3">Offering</th>
+                            <th class="py-3">Status</th>
+                            <th class="py-3 px-4 text-end">Management</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for pooja in poojas %}
+                            <tr class="{% if edit_mode and edit_id == pooja.id %}table-primary-subtle{% endif %}">
+                                <td class="py-4 px-4">
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar bg-primary-subtle text-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 45px; height: 45px;">
+                                            <span class="fs-5">🏵️</span>
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold fs-5 text-primary">{{ pooja.pooja_name }}</div>
+                                            <div class="text-muted small">Service ID: #{{ pooja.id }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="small fw-bold">{{ pooja.temple.name }}</div>
+                                    <div class="text-muted extra-small">{{ pooja.temple.location }}</div>
+                                </td>
+                                <td>
+                                    <div class="fw-bold text-success fs-5">₹{{ pooja.price }}</div>
+                                </td>
+                                <td>
+                                    {% if pooja.active %}
+                                        <span class="badge rounded-pill bg-success-subtle text-success border border-success px-3">Active</span>
+                                    {% else %}
+                                        <span class="badge rounded-pill bg-secondary-subtle text-secondary border border-secondary px-3">Inactive</span>
+                                    {% endif %}
+                                </td>
+                                <td class="px-4 text-end">
+                                    <div class="btn-group shadow-sm rounded-pill overflow-hidden">
+                                        <a href="{% url 'edit_pooja' pooja.id %}" class="btn btn-sm btn-white border-end px-3" title="Edit Service">
+                                            <i class="bi bi-pencil-square text-primary"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-sm btn-white px-3" data-bs-toggle="modal" data-bs-target="#deletePoojaModal{{ pooja.id }}" title="Delete Service">
+                                            <i class="bi bi-trash3 text-danger"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Delete Confirmation Modal -->
+                            <div class="modal fade" id="deletePoojaModal{{ pooja.id }}" tabindex="-1">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content border-0 shadow-lg">
+                                        <div class="modal-header border-0 pb-0">
+                                            <h5 class="modal-title fw-bold">Remove Service</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body py-4 text-center">
+                                            <div class="mx-auto mb-4 bg-danger-subtle text-danger rounded-circle d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                                                <i class="bi bi-trash3 fs-1"></i>
+                                            </div>
+                                            <h4 class="fw-bold">Remove {{ pooja.pooja_name }}?</h4>
+                                            <p class="text-muted px-4">This will permanently delete this pooja service from <span class="fw-bold">{{ pooja.temple.name }}</span>. This action cannot be undone.</p>
+                                        </div>
+                                        <div class="modal-footer border-0 p-4 justify-content-center">
+                                            <button type="button" class="btn btn-light px-5 rounded-pill" data-bs-dismiss="modal">Cancel</button>
+                                            <a href="{% url 'delete_pooja' pooja.id %}" class="btn btn-danger px-5 rounded-pill shadow-sm">Delete Service</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center py-5">
+                                    <div class="py-4">
+                                        <i class="bi bi-search fs-1 text-muted opacity-25 d-block mb-3"></i>
+                                        <h5 class="text-muted fw-bold">No Pooja Services Found</h5>
+                                        <p class="text-muted small">Creat some services to see them listed here.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
